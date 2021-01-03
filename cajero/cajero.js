@@ -28,12 +28,12 @@ calcActualMoney(); // Llamamos a la función que calcula y muestra cuanto dinero
 
 function setGlobalParameters()
 {
-    caja.push(new Billete(100, 5));
-    caja.push(new Billete(50, 15));
-    caja.push(new Billete(20, 10));
-    caja.push(new Billete(10, 12));
-    caja.push(new Billete(5, 10));
-    caja.push(new Billete(1, 30));
+    caja.push(new Billete(100, 10));
+    caja.push(new Billete(50, 50));
+    caja.push(new Billete(20, 100));
+    caja.push(new Billete(10, 200));
+    caja.push(new Billete(5, 100));
+    caja.push(new Billete(1, 100));
 }
 
 function entregarDinero()
@@ -43,13 +43,18 @@ function entregarDinero()
     var y = 0;
     dineroSolicitado = parseInt(numDinero.value); // Monto de Dinero solicitado por el usuario.
     clear();
+    
     if(actualMoney > 0)
-    {   // Calculation Core Block, Bucle que calcula la mínima cantidad posible de billetes que se debe entregar
+    {   
+        resultado.innerHTML = "<p>Retire su dinero con cuidado por favor.<br/>Monto solicitado: $" + dineroSolicitado +"</p>";   
+        
+        // Calculation Core Block, Bucle que calcula la mínima cantidad posible de billetes que se debe entregar
         for(var bi of caja)
         {
             if(dineroSolicitado > 0)
             {
                 div = Math.floor(dineroSolicitado / bi.valor);
+                
                 if(div > bi.cantidad)
                 {
                     papeles = bi.cantidad;
@@ -58,6 +63,7 @@ function entregarDinero()
                 {
                     papeles = div;
                 }
+
                 entregado.push(new Billete(bi.valor, papeles));
                 dineroSolicitado -= bi.valor * papeles; // Disminuimos el dinero solicitado para la siguiente iteración
                 actualMoney -= bi.valor * papeles; // Actualizamos el dinero que va quedando en el cajero según lo que vamos entregando
@@ -72,7 +78,7 @@ function entregarDinero()
         // Saber si se logro completar el monto solicitado o no, y si no, muestra el mensaje correspondiente
         if(dineroSolicitado > 0)
         {
-            resultado.innerHTML = "<p>Lo sentimos, no se pudo completar el monto, pero te dimos lo que pudimos: $" + dineroEntregadoSesion + "...<br/>Soy un Cajero Pobre y no tengo dinero :(</p>";   
+            resultado.innerHTML += "<p>Novedad: Lo sentimos, no se pudo completar el monto, pero te dimos lo que pudimos: $" + dineroEntregadoSesion + "...<br/>Soy un Cajero Pobre y no tengo dinero... lo siento, así es la vida a veces :(</p>";   
         }
         // Entrega del Dinero
         for(var e of entregado) // Delivery Block, Bloque que entrega el dinero como tal
@@ -87,7 +93,9 @@ function entregarDinero()
                 {
                     rightWord = "billetes";
                 }
+
                 resultado.innerHTML += e.cantidad + " " + rightWord + " de $" + e.valor + "<br/>";
+                
                 for(var sb = 0; sb < e.cantidad; sb++) // Se muestra la imagen del Billete el número de veces que se calculo su entrega
                 {   // sb: showing bills
                     e.showBill(x, y); // Se llama a la función que muestra el billete en el canvas
@@ -120,7 +128,9 @@ function calcActualMoney() // Función Reguladora del Balance monetario. Muestra
             }
         }
     }
+    
     moneyAvailable.innerHTML = "Dinero Total Disponible en el Cajero: $" + actualMoney; // Mostramos cuanto dinero hay en el cajero en el lugar correcto
+    
     if(dineroEntregadoSesion > 0)
     {   // Emitimos el reporte de entrega de dinero en cada sesion
         sessionNumber ++; // Acumulador para mostrar el número de la sesión / transacción correspondiente
